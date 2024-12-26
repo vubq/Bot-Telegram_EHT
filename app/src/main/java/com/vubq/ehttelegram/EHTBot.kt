@@ -2,15 +2,13 @@ package com.vubq.ehttelegram
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.PixelFormat
-import android.hardware.display.DisplayManager
-import android.media.ImageReader
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.vubq.ehttelegram.enums.AutoType
 import com.vubq.ehttelegram.enums.EquipmentType
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileOutputStream
@@ -19,7 +17,6 @@ import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import kotlinx.coroutines.tasks.await
 
 class EHTBot(private val telegramBot: TelegramBot) {
 
@@ -34,6 +31,8 @@ class EHTBot(private val telegramBot: TelegramBot) {
     private var presetB: Boolean = false;
 
     private var strengthenPlace: Int? = null;
+
+    private var eraseAttributePlace: Int? = null;
 
     fun setAuto(auto: Boolean) {
         this.auto = auto
@@ -130,6 +129,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
 
         val textToAppend = "Lần $bout: $text - $exist" + " - " + getCurrentDateTime()
 
+        val file = File("$pathData$fileName.txt")
+        if (!file.exists()) {
+            file.createNewFile()
+        }
         BufferedWriter(FileWriter("$pathData$fileName.txt", true)).use { writer ->
             writer.write(textToAppend)
             writer.newLine()
@@ -154,6 +157,25 @@ class EHTBot(private val telegramBot: TelegramBot) {
 
     fun screenCapture() {
         "test".screenCapture(0)
+    }
+
+    fun readFile(fileName: String): String {
+        val file = File("$pathData$fileName.txt")
+        if (!file.exists()) {
+            return "Không có file!"
+        } else {
+            return file.readText()
+        }
+    }
+
+    fun clearFile(fileName: String): String {
+        val file = File("$pathData$fileName.txt")
+        if (!file.exists()) {
+            return "Không có file!"
+        } else {
+            file.writeText("")
+            return "Đã clear file!"
+        }
     }
 
     private fun initAuto() {
@@ -193,6 +215,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
     fun equip() {
         if (autoType == AutoType.NULL && equipmentType == EquipmentType.NULL) {
             telegramBot.sendMessage("Command error!")
+            return
+        }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
             return
         }
         auto = true
@@ -252,14 +278,14 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn tìm kiếm
                 click(182, 843, 2000)
 
-                "equip".screenCapture(0)
+                "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("equip", 59, 307, 348 - 59, 349 - 307)
+                cropImage("Equip", 59, 307, 348 - 59, 349 - 307)
 
                 if (!auto) break
                 val comparativeWords = listOf("4 thuoc tinh co hieu luc")
-                val isTrue = getTextFromImage("equip", comparativeWords, 1)
+                val isTrue = getTextFromImage("Equip", comparativeWords, 1)
 
                 if (!auto) break
                 if (isTrue) {
@@ -282,13 +308,13 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn tìm kiếm
                 click(182, 843, 2000)
 
-                "equip".screenCapture(0)
+                "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("equip", 59, 307, 348 - 59, 349 - 307)
+                cropImage("Equip", 59, 307, 348 - 59, 349 - 307)
 
                 if (!auto) break
-                val isTrue2 = getTextFromImage("equip", comparativeWords, 2)
+                val isTrue2 = getTextFromImage("Equip", comparativeWords, 2)
 
                 if (!auto) break
                 if (isTrue2) {
@@ -303,6 +329,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
     fun strengthen() {
         if (autoType == AutoType.NULL && strengthenPlace == null) {
             telegramBot.sendMessage("Command error!")
+            return
+        }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
             return
         }
         auto = true
@@ -323,15 +353,15 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 if (strengthenPlace == 6) click(779, 1746, 500)
                 if (strengthenPlace == 7) click(873, 1746, 500)
 
-                "strengthen_max".screenCapture(0)
+                "StrengthenMax".screenCapture(0)
 
                 if (!auto) break
-                cropImage("strengthen_max", 109, 1262, 966 - 109, 1360 - 1262)
+                cropImage("StrengthenMax", 109, 1262, 966 - 109, 1360 - 1262)
 
                 if (!auto) break
                 val isTrue =
                     getTextFromImage(
-                        "strengthen_max",
+                        "StrengthenMax",
                         listOf("Khong the cuong hoa than them nua"),
                         1
                     )
@@ -346,13 +376,82 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn cường hóa
                 click(303, 2002, 7000)
 
-                "strengthen".screenCapture(0)
+                "Strengthen".screenCapture(0)
 
                 if (!auto) break
-                cropImage("strengthen", 186, 762, 881 - 186, 876 - 762)
+                cropImage("Strengthen", 186, 762, 881 - 186, 876 - 762)
 
                 if (!auto) break
-                val isTrue2 = getTextFromImage("strengthen", listOf("Cuong Hoa Thanh Cong"), 1)
+                val isTrue2 = getTextFromImage("Strengthen", listOf("Cuong Hoa Thanh Cong"), 1)
+
+                if (!auto) break
+                if (isTrue2) backup()
+            }
+        }.start()
+    }
+
+    private fun eraseAttribute() {
+        if (autoType == AutoType.NULL && eraseAttributePlace == null) {
+            telegramBot.sendMessage("Command error!")
+            return
+        }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
+            return
+        }
+        auto = true
+        Thread {
+            while (auto) {
+                initAuto()
+
+                //Nhấn chọn loại bỏ thuộc tính
+                click(535, 990, 500)
+
+                //Nhấn chọn ô
+                if (eraseAttributePlace == 0) click(198, 1746, 500)
+                if (eraseAttributePlace == 1) click(292, 1746, 500)
+                if (eraseAttributePlace == 2) click(389, 1746, 500)
+                if (eraseAttributePlace == 3) click(483, 1746, 500)
+                if (eraseAttributePlace == 4) click(584, 1746, 500)
+                if (eraseAttributePlace == 5) click(678, 1746, 500)
+                if (eraseAttributePlace == 6) click(779, 1746, 500)
+                if (eraseAttributePlace == 7) click(873, 1746, 500)
+
+                "EraseAttributeMax".screenCapture(0)
+
+                if (!auto) break
+                cropImage("EraseAttributeMax", 125, 1490, 817, 87)
+
+                if (!auto) break
+                val isTrue =
+                    getTextFromImage(
+                        "EraseAttributeMax",
+                        listOf("Khong co thuoc tinh am de loai bo"),
+                        1
+                    )
+
+                if (!auto) break
+                if (isTrue) {
+                    auto = false
+                    telegramBot.sendMessage("Đã loại bỏ thuộc tính âm!")
+                    break
+                }
+
+                //Nhấn loại bỏ
+                click(303, 2002, 7000)
+
+                "EraseAttribute".screenCapture(0)
+
+                if (!auto) break
+                cropImage("EraseAttribute", 206, 783, 663, 85)
+
+                if (!auto) break
+                val isTrue2 =
+                    getTextFromImage(
+                        "EraseAttribute",
+                        listOf("Da loai bo"),
+                        1
+                    )
 
                 if (!auto) break
                 if (isTrue2) backup()
