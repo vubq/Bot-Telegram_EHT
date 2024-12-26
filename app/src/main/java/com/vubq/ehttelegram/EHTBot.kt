@@ -21,17 +21,23 @@ import java.util.Calendar
 import java.util.Locale
 import kotlinx.coroutines.tasks.await
 
-class EHTBot {
+class EHTBot(private val telegramBot: TelegramBot) {
 
     private var pathData: String = "/storage/emulated/0/AutoEHT/"
 
-    private var isAuto: Boolean = false
+    private var auto: Boolean = false
 
     private var autoType: AutoType = AutoType.NULL;
 
     private var equipmentType: EquipmentType = EquipmentType.NULL
 
     private var presetB: Boolean = false;
+
+    private var strengthenPlace: Int? = null;
+
+    fun setAuto(auto: Boolean) {
+        this.auto = auto
+    }
 
     fun setAutoType(autoType: AutoType) {
         this.autoType = autoType
@@ -45,29 +51,35 @@ class EHTBot {
         this.presetB = presetB
     }
 
-    private fun String.adbExecution() {
+    fun setStrengthenPlace(strengthenPlace: Int?) {
+        this.strengthenPlace = strengthenPlace
+    }
+
+    private fun String.adbExecution(delay: Long) {
+        if (!auto) return
         val process = Runtime.getRuntime().exec(arrayOf("su", "-c", this))
         process.waitFor()
+        Thread.sleep(delay)
     }
 
-    private fun String.openApp() {
-        "monkey -p $this -c android.intent.category.LAUNCHER 1".adbExecution()
+    private fun String.openApp(delay: Long) {
+        "monkey -p $this -c android.intent.category.LAUNCHER 1".adbExecution(delay)
     }
 
-    private fun click(x: Int, y: Int) {
-        "input tap $x $y".adbExecution()
+    private fun click(x: Int, y: Int, delay: Long) {
+        "input tap $x $y".adbExecution(delay)
     }
 
-    private fun swipe(x1: Int, y1: Int, x2: Int, y2: Int, speed: Int = 500) {
-        "input swipe $x1 $y1 $x2 $y2 $speed".adbExecution()
+    private fun swipe(x1: Int, y1: Int, x2: Int, y2: Int, speed: Int = 500, delay: Long) {
+        "input swipe $x1 $y1 $x2 $y2 $speed".adbExecution(delay)
     }
 
-    private fun String.screenCapture() {
-        "screencap -p $pathData$this.png".adbExecution()
+    private fun String.screenCapture(delay: Long) {
+        "screencap -p $pathData$this.png".adbExecution(delay)
     }
 
-    private fun adjustBrightness(i: Int) {
-        "shell settings put system screen_brightness $i".adbExecution()
+    private fun adjustBrightness(i: Int, delay: Long) {
+        "shell settings put system screen_brightness $i".adbExecution(delay)
     }
 
     private fun getCurrentDateTime(): String {
@@ -114,6 +126,8 @@ class EHTBot {
 
         val exist = comparativeWords.any { text.contains(it, ignoreCase = true) }
 
+//        telegramBot.sendMessage("$text - $exist")
+
         val textToAppend = "Lần $bout: $text - $exist" + " - " + getCurrentDateTime()
 
         BufferedWriter(FileWriter("$pathData$fileName.txt", true)).use { writer ->
@@ -139,201 +153,209 @@ class EHTBot {
     }
 
     fun screenCapture() {
-        "test".screenCapture()
+        "test".screenCapture(0)
     }
 
     private fun initAuto() {
         //Mở App Backup
-        if (!isAuto) return
-        "com.machiav3lli.backup".openApp()
+        "com.machiav3lli.backup".openApp(500)
 
         //Nhấn khôi phục
-        if (!isAuto) return
-        Thread.sleep(500)
-        if (!isAuto) return
-        click(409, 895)
+        click(409, 895, 500)
 
         //Nhấn OK
-        if (!isAuto) return
-        Thread.sleep(500)
-        if (!isAuto) return
-        click(460, 656)
+        click(460, 656, 2000)
 
         //Mở EHT
-        if (!isAuto) return
-        Thread.sleep(2000)
-        if (!isAuto) return
-        "com.superplanet.evilhunter".openApp()
+        "com.superplanet.evilhunter".openApp(15000)
 
         //Nhấn Touch To Start
-        if (!isAuto) return
-        Thread.sleep(15000)
-        if (!isAuto) return
-        click(262, 817)
+        click(262, 817, 27000)
 
         //Nhấn đóng
-        if (!isAuto) return
-        Thread.sleep(27000)
-        if (!isAuto) return
-        click(262, 729)
+        click(262, 729, 500)
     }
 
-    private fun equip(selection: Int, optionB: Boolean) {
-        isAuto = true
+    private fun backup() {
+        //Mở App Backup
+        "com.machiav3lli.backup".openApp(500)
+
+        //Nhấn sao lưu
+        click(248, 1604, 500)
+
+        //Nhấn bỏ APK
+        click(121, 839, 500)
+
+        //Nhấn OK
+        click(939, 1643, 8000)
+    }
+
+    fun equip() {
+        if (autoType == AutoType.NULL && equipmentType == EquipmentType.NULL) {
+            telegramBot.sendMessage("Command error!")
+            return
+        }
+        auto = true
         Thread {
-            while (isAuto) {
+            while (auto) {
                 initAuto()
 
                 //Nhấn chọn lò rèn hoặc kim hoàn
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                if (selection == 3 || selection == 4) {
+                if (equipmentType == EquipmentType.NECKLACE || equipmentType == EquipmentType.RING) {
                     //Kim hoàn
-                    click(340, 557)
+                    click(340, 557, 500)
                 } else {
                     //Lò rèn
-                    click(210, 502)
+                    click(210, 502, 500)
                 }
 
                 //Nhấn chọn loại đồ
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                if (selection == 0 || selection == 4) {
+                if (equipmentType == EquipmentType.ARMOR || equipmentType == EquipmentType.NECKLACE) {
                     //Giáp or dây chuyền
-                    click(153, 331)
+                    click(153, 331, 500)
                 }
-                if (selection == 1) {
+                if (equipmentType == EquipmentType.GLOVES) {
                     //Găng
-                    click(202, 334)
+                    click(202, 334, 500)
                 }
-                if (selection == 2) {
+                if (equipmentType == EquipmentType.SHOE) {
                     //Giày
-                    click(247, 333)
+                    click(247, 333, 500)
                 }
 
                 //Nhấn chọn đồ
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                if (selection == 5) {
-                    if (!isAuto) break
-                    swipe(203, 594, 203, 359, 500)
-                    if (!isAuto) break
-                    swipe(203, 594, 203, 359, 500)
-                    if (!isAuto) break
-                    swipe(203, 594, 203, 359, 500)
-                    if (!isAuto) break
-                    swipe(203, 594, 203, 359, 500)
-                    if (!isAuto) break
-                    Thread.sleep(500)
-                    if (!isAuto) break
+                if (equipmentType == EquipmentType.WEAPON) {
+                    swipe(203, 594, 203, 359, 500, 0)
+                    swipe(203, 594, 203, 359, 500, 0)
+                    swipe(203, 594, 203, 359, 500, 0)
+                    swipe(203, 594, 203, 359, 500, 500)
+
                     //Vũ khí
-                    click(265, 580)
+                    click(265, 580, 500)
                 } else {
-                    if (!isAuto) break
                     //Các đồ khác
-                    click(392, 473)
+                    click(392, 473, 500)
                 }
 
                 //Kéo đầy thanh
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                swipe(135, 734, 485, 734)
+                swipe(135, 734, 485, 734, 500, 500)
 
                 //Nhấn điều chế
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                click(200, 828)
+                click(200, 828, 7000)
 
                 //Nhấn tìm thuộc tính
-                if (!isAuto) break
-                Thread.sleep(7000)
-                if (!isAuto) break
-                click(270, 326)
+                click(270, 326, 500)
 
                 //Nhấn thiết lập sẵn A
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                click(109, 152)
+                click(109, 152, 500)
 
                 //Nhấn tìm kiếm
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                click(182, 843)
+                click(182, 843, 2000)
 
-                if (!isAuto) break
-                Thread.sleep(2000)
-                if (!isAuto) break
-                "equip".screenCapture()
+                "equip".screenCapture(0)
 
-                if (!isAuto) break
+                if (!auto) break
                 cropImage("equip", 59, 307, 348 - 59, 349 - 307)
 
-                if (!isAuto) break
+                if (!auto) break
                 val comparativeWords = listOf("4 thuoc tinh co hieu luc")
                 val isTrue = getTextFromImage("equip", comparativeWords, 1)
 
-                if (!isAuto) break
+                if (!auto) break
                 if (isTrue) {
-                    isAuto = false
+                    auto = false
+                    telegramBot.sendMessage("Đã tìm thấy trang bị")
                     break
                 }
 
-                if (!isAuto) break
-                if (!optionB) continue
+                if (!presetB) continue
 
                 //Nhấn xác nhận
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                click(265, 863)
-
-                //if (!isAuto) break
-                //Thread.sleep(500)
-                //if (!isAuto) break
-                ////Nhấn xác nhận
-                //click(527, 2084)
+                click(265, 863, 500)
 
                 //Nhấn tìm thuộc tính
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                click(270, 326)
+                click(270, 326, 500)
 
                 //Nhấn thiết lập sẵn B
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                click(228, 154)
+                click(228, 154, 500)
 
                 //Nhấn tìm kiếm
-                if (!isAuto) break
-                Thread.sleep(500)
-                if (!isAuto) break
-                click(182, 843)
+                click(182, 843, 2000)
 
-                if (!isAuto) break
-                Thread.sleep(2000)
-                if (!isAuto) break
-                "equip".screenCapture()
+                "equip".screenCapture(0)
 
-                if (!isAuto) break
+                if (!auto) break
                 cropImage("equip", 59, 307, 348 - 59, 349 - 307)
 
-                if (!isAuto) break
+                if (!auto) break
                 val isTrue2 = getTextFromImage("equip", comparativeWords, 2)
 
-                if (!isAuto) break
+                if (!auto) break
                 if (isTrue2) {
-                    isAuto = false
+                    auto = false
+                    telegramBot.sendMessage("Đã tìm thấy trang bị!")
                     break
                 }
+            }
+        }.start()
+    }
+
+    fun strengthen() {
+        if (autoType == AutoType.NULL && strengthenPlace == null) {
+            telegramBot.sendMessage("Command error!")
+            return
+        }
+        auto = true
+        Thread {
+            while (auto) {
+                initAuto()
+
+                //Nhấn chọn cường hóa thần
+                click(535, 990, 500)
+
+                //Nhấn chọn ô
+                if (strengthenPlace == 0) click(198, 1746, 500)
+                if (strengthenPlace == 1) click(292, 1746, 500)
+                if (strengthenPlace == 2) click(389, 1746, 500)
+                if (strengthenPlace == 3) click(483, 1746, 500)
+                if (strengthenPlace == 4) click(584, 1746, 500)
+                if (strengthenPlace == 5) click(678, 1746, 500)
+                if (strengthenPlace == 6) click(779, 1746, 500)
+                if (strengthenPlace == 7) click(873, 1746, 500)
+
+                "strengthen_max".screenCapture(0)
+
+                if (!auto) break
+                cropImage("strengthen_max", 109, 1262, 966 - 109, 1360 - 1262)
+
+                if (!auto) break
+                val isTrue =
+                    getTextFromImage(
+                        "strengthen_max",
+                        listOf("Khong the cuong hoa than them nua"),
+                        1
+                    )
+
+                if (!auto) break
+                if (isTrue) {
+                    auto = false
+                    telegramBot.sendMessage("Cường hóa max!")
+                    break
+                }
+
+                //Nhấn cường hóa
+                click(303, 2002, 7000)
+
+                "strengthen".screenCapture(0)
+
+                if (!auto) break
+                cropImage("strengthen", 186, 762, 881 - 186, 876 - 762)
+
+                if (!auto) break
+                val isTrue2 = getTextFromImage("strengthen", listOf("Cuong Hoa Thanh Cong"), 1)
+
+                if (!auto) break
+                if (isTrue2) backup()
             }
         }.start()
     }
