@@ -6,7 +6,10 @@ import com.github.kotlintelegrambot.dispatcher.callbackQuery
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.entities.CallbackQuery
 import com.github.kotlintelegrambot.entities.ChatId
+import com.github.kotlintelegrambot.entities.InlineKeyboardMarkup
 import com.github.kotlintelegrambot.entities.Message
+import com.github.kotlintelegrambot.entities.keyboard.InlineKeyboardButton
+import com.github.kotlintelegrambot.entities.keyboard.WebAppInfo
 import com.vubq.ehttelegram.enums.AutoType
 import com.vubq.ehttelegram.enums.EquipmentType
 
@@ -36,47 +39,7 @@ class TelegramBot {
         val commands = command.split("_");
         when (commands[0]) {
             "/start" -> {
-                bot.sendMessage(
-                    ChatId.fromId(message.chat.id),
-                    "Bot đã được khởi động! \n\n" +
-                            "Command: \n\n" +
-                            "Trang bị: \n" +
-                            "/auto_Equip_Armor_B \n" +
-                            "/auto_Equip_Gloves_B \n" +
-                            "/auto_Equip_Shoe_B \n" +
-                            "/auto_Equip_Necklace_B \n" +
-                            "/auto_Equip_Ring_B \n" +
-                            "/auto_Equip_Weapon_B \n" +
-                            "/auto_Equip_Armor \n" +
-                            "/auto_Equip_Gloves \n" +
-                            "/auto_Equip_Shoe \n" +
-                            "/auto_Equip_Necklace \n" +
-                            "/auto_Equip_Ring \n" +
-                            "/auto_Equip_Weapon \n\n" +
-                            "Cường hóa: \n" +
-                            "/auto_Strengthen_1 \n" +
-                            "/auto_Strengthen_2 \n" +
-                            "/auto_Strengthen_3 \n" +
-                            "/auto_Strengthen_4 \n" +
-                            "/auto_Strengthen_5 \n" +
-                            "/auto_Strengthen_6 \n" +
-                            "/auto_Strengthen_7 \n" +
-                            "/auto_Strengthen_8 \n\n" +
-                            "Đọc file txt: \n" +
-                            "/readFile_Equip \n" +
-                            "/readFile_Strengthen \n" +
-                            "/readFile_StrengthenMax \n" +
-                            "/readFile_EraseAttribute \n" +
-                            "/readFile_EraseAttributeMax \n\n" +
-                            "Clear file txt: \n" +
-                            "/clearFile_Equip \n" +
-                            "/clearFile_Strengthen \n" +
-                            "/clearFile_StrengthenMax \n" +
-                            "/clearFile_EraseAttribute \n" +
-                            "/clearFile_EraseAttributeMax \n\n" +
-                            "Dừng: \n" +
-                            "/stopAuto \n\n"
-                )
+                menuStart(message.chat.id)
             }
 
             "/checkBot" -> {
@@ -186,42 +149,25 @@ class TelegramBot {
                 )
             }
 
-            else -> {
-                bot.sendMessage(
-                    ChatId.fromId(message.chat.id),
-                    "Bot đã được khởi động! \n\n" +
-                            "Command: \n\n" +
-                            "Trang bị: \n" +
-                            "/auto_Equip_Armor_B \n" +
-                            "/auto_Equip_Gloves_B \n" +
-                            "/auto_Equip_Shoe_B \n" +
-                            "/auto_Equip_Necklace_B \n" +
-                            "/auto_Equip_Ring_B \n" +
-                            "/auto_Equip_Weapon_B \n" +
-                            "/auto_Equip_Armor \n" +
-                            "/auto_Equip_Gloves \n" +
-                            "/auto_Equip_Shoe \n" +
-                            "/auto_Equip_Necklace \n" +
-                            "/auto_Equip_Ring \n" +
-                            "/auto_Equip_Weapon \n\n" +
-                            "Cường hóa: \n" +
-                            "/auto_Strengthen_1 \n" +
-                            "/auto_Strengthen_2 \n" +
-                            "/auto_Strengthen_3 \n" +
-                            "/auto_Strengthen_4 \n" +
-                            "/auto_Strengthen_5 \n" +
-                            "/auto_Strengthen_6 \n" +
-                            "/auto_Strengthen_7 \n" +
-                            "/auto_Strengthen_8 \n\n" +
-                            "Đọc file: \n" +
-                            "/readFile_Equip \n" +
-                            "/readFile_Strengthen \n" +
-                            "/readFile_StrengthenMax \n" +
-                            "/readFile_EraseAttribute \n" +
-                            "/readFile_EraseAttributeMax \n\n" +
-                            "Dừng: \n" +
-                            "/stopAuto \n\n"
+            "/test" -> {
+                val inlineKeyboardMarkup = InlineKeyboardMarkup.create(
+                    listOf(
+                        InlineKeyboardButton.WebApp(
+                            text = "Mở web",
+                            webApp = WebAppInfo("https://minspo.info")
+                        ),
+                    )
                 )
+
+                bot.sendMessage(
+                    chatId = ChatId.fromId(message.chat.id),
+                    text = "Play ngay",
+                    replyMarkup = inlineKeyboardMarkup
+                )
+            }
+
+            else -> {
+                menuStart(message.chat.id)
             }
         }
     }
@@ -233,6 +179,50 @@ class TelegramBot {
     private fun isUserAllowed(message: Message): Boolean {
         val userId = message.from?.id
         return userId != null && allowedUserIds.contains(userId)
+    }
+
+    private fun menuStart(id: Long) {
+        bot.sendMessage(
+            ChatId.fromId(id),
+            "Bot đã được khởi động! \n\n" +
+                    "Command: \n\n" +
+                    "Trang bị: \n" +
+                    "/auto_Equip_Armor_B \n" +
+                    "/auto_Equip_Gloves_B \n" +
+                    "/auto_Equip_Shoe_B \n" +
+                    "/auto_Equip_Necklace_B \n" +
+                    "/auto_Equip_Ring_B \n" +
+                    "/auto_Equip_Weapon_B \n" +
+                    "/auto_Equip_Armor_A \n" +
+                    "/auto_Equip_Gloves_A \n" +
+                    "/auto_Equip_Shoe_A \n" +
+                    "/auto_Equip_Necklace_A \n" +
+                    "/auto_Equip_Ring_A \n" +
+                    "/auto_Equip_Weapon_A \n\n" +
+                    "Cường hóa: \n" +
+                    "/auto_Strengthen_1 \n" +
+                    "/auto_Strengthen_2 \n" +
+                    "/auto_Strengthen_3 \n" +
+                    "/auto_Strengthen_4 \n" +
+                    "/auto_Strengthen_5 \n" +
+                    "/auto_Strengthen_6 \n" +
+                    "/auto_Strengthen_7 \n" +
+                    "/auto_Strengthen_8 \n\n" +
+                    "Đọc file txt: \n" +
+                    "/readFile_Equip \n" +
+                    "/readFile_Strengthen \n" +
+                    "/readFile_StrengthenMax \n" +
+                    "/readFile_EraseAttribute \n" +
+                    "/readFile_EraseAttributeMax \n\n" +
+                    "Clear file txt: \n" +
+                    "/clearFile_Equip \n" +
+                    "/clearFile_Strengthen \n" +
+                    "/clearFile_StrengthenMax \n" +
+                    "/clearFile_EraseAttribute \n" +
+                    "/clearFile_EraseAttributeMax \n\n" +
+                    "Dừng: \n" +
+                    "/stopAuto \n\n"
+        )
     }
 
     fun sendMessage(message: String) {

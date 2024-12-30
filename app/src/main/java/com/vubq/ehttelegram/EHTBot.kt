@@ -236,8 +236,8 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 }
 
                 //Nhấn chọn loại đồ
-                if (equipmentType == EquipmentType.ARMOR || equipmentType == EquipmentType.NECKLACE) {
-                    //Giáp or dây chuyền
+                if (equipmentType == EquipmentType.ARMOR || equipmentType == EquipmentType.RING) {
+                    //Giáp or nhẫn
                     click(153, 331, 500)
                 }
                 if (equipmentType == EquipmentType.GLOVES) {
