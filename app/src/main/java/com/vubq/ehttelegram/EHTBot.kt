@@ -23,7 +23,7 @@ import kotlinx.coroutines.tasks.await
 
 class EHTBot(private val telegramBot: TelegramBot) {
 
-    private var pathData: String = "/storage/1775-1612/AutoEHT/"
+    private var pathData: String = "/storage/emulated/0/AutoEHT/"
 
     private var auto: Boolean = false
 
@@ -35,8 +35,11 @@ class EHTBot(private val telegramBot: TelegramBot) {
 
     private var strengthenPlace: Int? = null;
 
+    private var eraseAttributePlace: Int? = null;
+
     fun setAuto(auto: Boolean) {
         this.auto = auto
+        telegramBot.sendMessage("Stop!")
     }
 
     fun setAutoType(autoType: AutoType) {
@@ -53,6 +56,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
 
     fun setStrengthenPlace(strengthenPlace: Int?) {
         this.strengthenPlace = strengthenPlace
+    }
+
+    fun setEraseAttributePlace(eraseAttributePlace: Int?) {
+        this.eraseAttributePlace = eraseAttributePlace
     }
 
     private fun String.adbExecution(delay: Long) {
@@ -196,6 +203,7 @@ class EHTBot(private val telegramBot: TelegramBot) {
             return
         }
         auto = true
+        telegramBot.sendMessage("Start!")
         Thread {
             while (auto) {
                 initAuto()
@@ -252,14 +260,14 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn tìm kiếm
                 click(335, 2045, 2000)
 
-                "equip".screenCapture(0)
+                "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("equip", 85, 865, 623, 107)
+                cropImage("Equip", 85, 865, 623, 107)
 
                 if (!auto) break
                 val comparativeWords = listOf("4 thuoc tinh co hieu luc")
-                val isTrue = getTextFromImage("equip", comparativeWords, 1)
+                val isTrue = getTextFromImage("Equip", comparativeWords, 1)
 
                 if (!auto) break
                 if (isTrue) {
@@ -282,13 +290,13 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn tìm kiếm
                 click(335, 2045, 2000)
 
-                "equip".screenCapture(0)
+                "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("equip", 85, 865, 623, 107)
+                cropImage("Equip", 85, 865, 623, 107)
 
                 if (!auto) break
-                val isTrue2 = getTextFromImage("equip", comparativeWords, 2)
+                val isTrue2 = getTextFromImage("Equip", comparativeWords, 2)
 
                 if (!auto) break
                 if (isTrue2) {
@@ -306,6 +314,7 @@ class EHTBot(private val telegramBot: TelegramBot) {
             return
         }
         auto = true
+        telegramBot.sendMessage("Start!")
         Thread {
             while (auto) {
                 initAuto()
@@ -314,24 +323,24 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 click(535, 990, 500)
 
                 //Nhấn chọn ô
-                if (strengthenPlace == 0) click(198, 1746, 500)
-                if (strengthenPlace == 1) click(292, 1746, 500)
-                if (strengthenPlace == 2) click(389, 1746, 500)
-                if (strengthenPlace == 3) click(483, 1746, 500)
-                if (strengthenPlace == 4) click(584, 1746, 500)
-                if (strengthenPlace == 5) click(678, 1746, 500)
-                if (strengthenPlace == 6) click(779, 1746, 500)
-                if (strengthenPlace == 7) click(873, 1746, 500)
+                if (strengthenPlace == 1) click(198, 1746, 500)
+                if (strengthenPlace == 2) click(292, 1746, 500)
+                if (strengthenPlace == 3) click(389, 1746, 500)
+                if (strengthenPlace == 4) click(483, 1746, 500)
+                if (strengthenPlace == 5) click(584, 1746, 500)
+                if (strengthenPlace == 6) click(678, 1746, 500)
+                if (strengthenPlace == 7) click(779, 1746, 500)
+                if (strengthenPlace == 8) click(873, 1746, 500)
 
-                "strengthen_max".screenCapture(0)
+                "StrengthenMax".screenCapture(0)
 
                 if (!auto) break
-                cropImage("strengthen_max", 109, 1262, 966 - 109, 1360 - 1262)
+                cropImage("StrengthenMax", 109, 1262, 966 - 109, 1360 - 1262)
 
                 if (!auto) break
                 val isTrue =
                     getTextFromImage(
-                        "strengthen_max",
+                        "StrengthenMax",
                         listOf("Khong the cuong hoa than them nua"),
                         1
                     )
@@ -346,16 +355,268 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn cường hóa
                 click(303, 2002, 7000)
 
-                "strengthen".screenCapture(0)
+                "Strengthen".screenCapture(0)
 
                 if (!auto) break
-                cropImage("strengthen", 186, 762, 881 - 186, 876 - 762)
+                cropImage("Strengthen", 186, 762, 881 - 186, 876 - 762)
 
                 if (!auto) break
-                val isTrue2 = getTextFromImage("strengthen", listOf("Cuong Hoa Thanh Cong"), 1)
+                val isTrue2 = getTextFromImage("Strengthen", listOf("Cuong Hoa Thanh Cong"), 1)
 
                 if (!auto) break
                 if (isTrue2) backup()
+            }
+        }.start()
+    }
+
+    fun eraseAttribute() {
+        if (autoType == AutoType.NULL && eraseAttributePlace == null) {
+            telegramBot.sendMessage("Command error!")
+            return
+        }
+        auto = true
+        telegramBot.sendMessage("Start!")
+        Thread {
+            while (auto) {
+                initAuto()
+
+                //Nhấn chọn loại bỏ thuộc tính
+                click(535, 990, 500)
+
+                //Nhấn chọn ô
+                if (eraseAttributePlace == 1) click(198, 1746, 500)
+                if (eraseAttributePlace == 2) click(292, 1746, 500)
+                if (eraseAttributePlace == 3) click(389, 1746, 500)
+                if (eraseAttributePlace == 4) click(483, 1746, 500)
+                if (eraseAttributePlace == 5) click(584, 1746, 500)
+                if (eraseAttributePlace == 6) click(678, 1746, 500)
+                if (eraseAttributePlace == 7) click(779, 1746, 500)
+                if (eraseAttributePlace == 8) click(873, 1746, 500)
+
+                "EraseAttributeMax".screenCapture(0)
+
+                if (!auto) break
+                cropImage("EraseAttributeMax", 125, 1490, 817, 87)
+
+                if (!auto) break
+                val isTrue =
+                    getTextFromImage(
+                        "EraseAttributeMax",
+                        listOf("Khong co thuoc tinh am de loai bo"),
+                        1
+                    )
+
+                if (!auto) break
+                if (isTrue) {
+                    auto = false
+                    telegramBot.sendMessage("Loại bỏ hết thuộc tính!")
+                    break
+                }
+
+                //Nhấn loại bỏ
+                click(303, 2002, 7000)
+
+                "EraseAttribute".screenCapture(0)
+
+                if (!auto) break
+                cropImage("EraseAttribute", 206, 783, 663, 85)
+
+                if (!auto) break
+                val isTrue2 =
+                    getTextFromImage(
+                        "EraseAttribute",
+                        listOf("Da loai bo"),
+                        1
+                    )
+
+                if (!auto) break
+                if (isTrue2) backup()
+            }
+        }.start()
+    }
+
+    fun ridingAnimal() {
+        if (autoType == AutoType.NULL) {
+            telegramBot.sendMessage("Command error!")
+            return
+        }
+        auto = true
+        telegramBot.sendMessage("Start!")
+        Thread {
+            while (auto) {
+                initAuto()
+
+                click(1005, 910, 5000)
+
+                click(190, 2265, 500)
+
+                click(377, 1672, 500)
+
+                click(274, 1517, 2000)
+
+                "RidingAnimal".screenCapture(0)
+
+                if (!auto) break
+                cropImage("RidingAnimal", 98, 754, 266, 68)
+
+                if (!auto) break
+                val isTrue2 =
+                    getTextFromImage(
+                        "RidingAnimal",
+                        listOf("LEO S", "BLUBEE S", "PINIA S", "INFERNO S"),
+                        1
+                    )
+
+                if (!auto) break
+                if (isTrue2) backup()
+            }
+        }.start()
+    }
+
+    fun bossChest() {
+        if (autoType == AutoType.NULL) {
+            telegramBot.sendMessage("Command error!")
+            return
+        }
+        auto = true
+        telegramBot.sendMessage("Start!")
+        Thread {
+            while (auto) {
+                initAuto()
+
+                //Nhấn mở rương
+                click(751, 2315, 500)
+
+                //Nhấn tab đồ đặc biệt
+                click(666, 1368, 500)
+
+                //Kéo
+                swipe(430, 2181, 430, 1429, 500, 500)
+                swipe(430, 2181, 430, 1429, 500, 500)
+                swipe(430, 2181, 430, 1429, 500, 500)
+                swipe(430, 2181, 430, 1429, 500, 500)
+
+                //Nhấn vào rương boss
+                click(938, 1701, 500)
+
+                //Nhấn sử dụng
+//                click(540, 1640, 7000)
+                click(277, 1640, 7000)
+
+                //Chụp ảnh
+                "BossCheat".screenCapture(0)
+
+                //Cắt ảnh
+                if (!auto) break
+                cropImage("BossCheat", 389, 1197, 682 - 389, 1299 - 1197)
+
+                if (!auto) break
+                val isTrue =
+                    getTextFromImage(
+                        "BossCheat",
+                        listOf("Tinh Chat Vua"),
+                        1
+                    )
+
+                if (!auto) break
+                if (!isTrue) {
+                    auto = false
+                    telegramBot.sendMessage("Tìm thấy đồ tốt!")
+                    break
+                }
+
+                for (i in 1..11) {
+                    //Item tiếp theo
+                    click(877, 1127, 2000)
+
+                    //Chụp ảnh
+                    "BossCheat".screenCapture(0)
+
+                    //Cắt ảnh
+                    if (!auto) break
+                    cropImage("BossCheat", 389, 1197, 682 - 389, 1299 - 1197)
+
+                    if (!auto) break
+                    val isTrue2 =
+                        getTextFromImage(
+                            "BossCheat",
+                            listOf("Tinh Chat Vua"),
+                            1
+                        )
+
+                    if (!auto) break
+                    if (!isTrue2) {
+                        auto = false
+                        telegramBot.sendMessage("Tìm thấy đồ tốt!")
+                        break
+                    }
+                }
+            }
+        }.start()
+    }
+
+    fun character() {
+        if (autoType == AutoType.NULL) {
+            telegramBot.sendMessage("Command error!")
+            return
+        }
+        auto = true
+        telegramBot.sendMessage("Start!")
+        Thread {
+            while (auto) {
+                initAuto()
+
+                //Nhấn mở rương
+                click(751, 2315, 500)
+
+                //Nhấn tab đồ đặc biệt
+                click(666, 1368, 500)
+
+                //Kéo
+                swipe(430, 2181, 430, 1429, 500, 500)
+                swipe(430, 2181, 430, 1429, 500, 500)
+                swipe(430, 2181, 430, 1429, 500, 500)
+                swipe(430, 2181, 430, 1429, 500, 500)
+
+                //Nhấn vào bình
+                click(747, 1500, 500)
+
+                //Nhấn sử dụng
+                click(355, 1611, 500)
+
+                //Chọn hunter
+                click(293, 1011, 500)
+
+                //Nhấn thay đổi
+                click(371, 1731, 4000)
+
+                //Nhấn thợ săn
+                click(543, 2308, 1000)
+
+                //Chọn thợ săn đầu
+                click(121, 1763, 4000)
+
+                //Chụp ảnh
+                "Character".screenCapture(0)
+
+                //Cắt ảnh
+                if (!auto) break
+                cropImage("Character", 202, 404, 867 - 202, 498 - 404)
+
+                if (!auto) break
+                val isTrue =
+                    getTextFromImage(
+                        "Character",
+                        listOf("Nhanh Nhen"),
+                        1
+                    )
+
+                if (!auto) break
+                if (isTrue) {
+                    auto = false
+                    telegramBot.sendMessage("Thuộc tính tốt!")
+                    break
+                }
             }
         }.start()
     }

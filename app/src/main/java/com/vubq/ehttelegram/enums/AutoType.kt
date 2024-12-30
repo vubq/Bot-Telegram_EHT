@@ -3,6 +3,9 @@ package com.vubq.ehttelegram.enums
 enum class AutoType {
     NULL,
     EQUIP,
-    MOUNT,
-    STRENGTHEN;
+    STRENGTHEN,
+    ERASE_ATTRIBUTE,
+    RIDING_ANIMAL,
+    BOSS_CHEAT,
+    CHARACTER;
 }

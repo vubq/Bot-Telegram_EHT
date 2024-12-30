@@ -36,33 +36,7 @@ class TelegramBot {
         val commands = command.split("_");
         when (commands[0]) {
             "/start" -> {
-                bot.sendMessage(
-                    ChatId.fromId(message.chat.id),
-                    "Bot đã được khởi động! \n\n" +
-                            "Command: \n\n" +
-                            "Trang bị: \n" +
-                            "/auto_Equip_Armor_B \n" +
-                            "/auto_Equip_Gloves_B \n" +
-                            "/auto_Equip_Shoe_B \n" +
-                            "/auto_Equip_Necklace_B \n" +
-                            "/auto_Equip_Ring_B \n" +
-                            "/auto_Equip_Weapon_B \n" +
-                            "/auto_Equip_Armor \n" +
-                            "/auto_Equip_Gloves \n" +
-                            "/auto_Equip_Shoe \n" +
-                            "/auto_Equip_Necklace \n" +
-                            "/auto_Equip_Ring \n" +
-                            "/auto_Equip_Weapon \n\n" +
-                            "Cường hóa: \n" +
-                            "/auto_Strengthen_1 \n" +
-                            "/auto_Strengthen_2 \n" +
-                            "/auto_Strengthen_3 \n" +
-                            "/auto_Strengthen_4 \n" +
-                            "/auto_Strengthen_5 \n" +
-                            "/auto_Strengthen_6 \n" +
-                            "/auto_Strengthen_7 \n" +
-                            "/auto_Strengthen_8 \n"
-                )
+                menuStart(message.chat.id)
             }
 
             "/checkBot" -> {
@@ -154,8 +128,67 @@ class TelegramBot {
                         ehtBot.strengthen()
                     }
 
+                    commands[1].equals("EraseAttribute", ignoreCase = true) -> {
+                        ehtBot.setAutoType(AutoType.ERASE_ATTRIBUTE)
+                        when {
+                            commands[2].equals("1", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(1)
+                            }
+
+                            commands[2].equals("2", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(2)
+                            }
+
+                            commands[2].equals("3", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(3)
+                            }
+
+                            commands[2].equals("4", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(4)
+                            }
+
+                            commands[2].equals("5", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(5)
+                            }
+
+                            commands[2].equals("6", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(6)
+                            }
+
+                            commands[2].equals("7", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(7)
+                            }
+
+                            commands[2].equals("8", ignoreCase = true) -> {
+                                ehtBot.setEraseAttributePlace(8)
+                            }
+
+                            else -> ehtBot.setEraseAttributePlace(null)
+                        }
+                        ehtBot.eraseAttribute()
+                    }
+
+                    commands[1].equals("RidingAnimal", ignoreCase = true) -> {
+                        ehtBot.setAutoType(AutoType.RIDING_ANIMAL)
+                        ehtBot.ridingAnimal()
+                    }
+
+                    commands[1].equals("BossCheat", ignoreCase = true) -> {
+                        ehtBot.setAutoType(AutoType.BOSS_CHEAT)
+                        ehtBot.bossChest()
+                    }
+
+                    commands[1].equals("Character", ignoreCase = true) -> {
+                        ehtBot.setAutoType(AutoType.CHARACTER)
+                        ehtBot.character()
+                    }
+
                     else -> ehtBot.setAutoType(AutoType.NULL)
                 }
+            }
+
+            else -> {
+                menuStart(message.chat.id)
             }
         }
     }
@@ -167,6 +200,71 @@ class TelegramBot {
     private fun isUserAllowed(message: Message): Boolean {
         val userId = message.from?.id
         return userId != null && allowedUserIds.contains(userId)
+    }
+
+    private fun menuStart(id: Long) {
+        bot.sendMessage(
+            ChatId.fromId(id),
+            "Bot đã được khởi động! \n\n" +
+                    "Command: \n\n" +
+                    "Trang bị: \n" +
+                    "/auto_Equip_Armor_B \n" +
+                    "/auto_Equip_Gloves_B \n" +
+                    "/auto_Equip_Shoe_B \n" +
+                    "/auto_Equip_Necklace_B \n" +
+                    "/auto_Equip_Ring_B \n" +
+                    "/auto_Equip_Weapon_B \n" +
+                    "/auto_Equip_Armor_A \n" +
+                    "/auto_Equip_Gloves_A \n" +
+                    "/auto_Equip_Shoe_A \n" +
+                    "/auto_Equip_Necklace_A \n" +
+                    "/auto_Equip_Ring_A \n" +
+                    "/auto_Equip_Weapon_A \n\n" +
+                    "Cường hóa: \n" +
+                    "/auto_Strengthen_1 \n" +
+                    "/auto_Strengthen_2 \n" +
+                    "/auto_Strengthen_3 \n" +
+                    "/auto_Strengthen_4 \n" +
+                    "/auto_Strengthen_5 \n" +
+                    "/auto_Strengthen_6 \n" +
+                    "/auto_Strengthen_7 \n" +
+                    "/auto_Strengthen_8 \n\n" +
+                    "Tẩy thuộc tính: \n" +
+                    "/auto_EraseAttribute_1 \n" +
+                    "/auto_EraseAttribute_2 \n" +
+                    "/auto_EraseAttribute_3 \n" +
+                    "/auto_EraseAttribute_4 \n" +
+                    "/auto_EraseAttribute_5 \n" +
+                    "/auto_EraseAttribute_6 \n" +
+                    "/auto_EraseAttribute_7 \n" +
+                    "/auto_EraseAttribute_8 \n\n" +
+                    "Thú cưỡi: \n" +
+                    "/auto_RidingAnimal \n\n" +
+                    "Rương boss: \n" +
+                    "/auto_BossCheat \n\n" +
+                    "Tính cách: \n" +
+                    "/auto_Character \n\n" +
+                    "Đọc file txt: \n" +
+                    "/readFile_Equip \n" +
+                    "/readFile_Strengthen \n" +
+                    "/readFile_StrengthenMax \n" +
+                    "/readFile_EraseAttribute \n" +
+                    "/readFile_EraseAttributeMax \n" +
+                    "/readFile_RidingAnimal \n" +
+                    "/readFile_BossCheat \n" +
+                    "/readFile_Character \n\n" +
+                    "Clear file txt: \n" +
+                    "/clearFile_Equip \n" +
+                    "/clearFile_Strengthen \n" +
+                    "/clearFile_StrengthenMax \n" +
+                    "/clearFile_EraseAttribute \n" +
+                    "/clearFile_EraseAttributeMax \n" +
+                    "/clearFile_RidingAnimal \n" +
+                    "/clearFile_BossCheat \n" +
+                    "/clearFile_Character \n\n" +
+                    "Dừng: \n" +
+                    "/stopAuto \n\n"
+        )
     }
 
     fun sendMessage(message: String) {
