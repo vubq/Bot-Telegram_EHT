@@ -62,6 +62,25 @@ class EHTBot(private val telegramBot: TelegramBot) {
         this.eraseAttributePlace = eraseAttributePlace
     }
 
+    fun readFile(fileName: String): String {
+        val file = File("$pathData$fileName.txt")
+        if (!file.exists()) {
+            return "Không có file!"
+        } else {
+            return file.readText()
+        }
+    }
+
+    fun clearFile(fileName: String): String {
+        val file = File("$pathData$fileName.txt")
+        if (!file.exists()) {
+            return "Không có file!"
+        } else {
+            file.writeText("")
+            return "Đã clear file!"
+        }
+    }
+
     private fun String.adbExecution(delay: Long) {
         if (!auto) return
         val process = Runtime.getRuntime().exec(arrayOf("su", "-c", this))
@@ -168,19 +187,19 @@ class EHTBot(private val telegramBot: TelegramBot) {
         "com.machiav3lli.backup".openApp(500)
 
         //Nhấn khôi phục
-        click(408, 896, 500)
+        click(587, 1208, 500)
 
         //Nhấn OK
-        click(458 ,687, 4000)
+        click(639, 846, 3000)
 
         //Mở EHT
-        "com.superplanet.evilhunter".openApp(14000)
+        "com.superplanet.evilhunter".openApp(15000)
 
         //Nhấn Touch To Start
-        click(257, 817, 25000)
+        click(344, 1089, 26000)
 
         //Nhấn đóng
-        click(265, 727, 500)
+        click(355, 968, 500)
     }
 
     private fun backup() {
@@ -202,6 +221,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
             telegramBot.sendMessage("Command error!")
             return
         }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
+            return
+        }
         auto = true
         telegramBot.sendMessage("Start!")
         Thread {
@@ -211,59 +234,59 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn chọn lò rèn hoặc kim hoàn
                 if (equipmentType == EquipmentType.NECKLACE || equipmentType == EquipmentType.RING) {
                     //Kim hoàn
-                    click(351, 586, 500)
+                    click(470, 783, 500)
                 } else {
                     //Lò rèn
-                    click(226, 521, 500)
+                    click(301, 697, 500)
                 }
 
                 //Nhấn chọn loại đồ
-                if (equipmentType == EquipmentType.ARMOR || equipmentType == EquipmentType.NECKLACE) {
-                    //Giáp or dây chuyền
-                    click(153, 332, 500)
+                if (equipmentType == EquipmentType.ARMOR || equipmentType == EquipmentType.RING) {
+                    //Giáp or nhẫn
+                    click(206, 441, 500)
                 }
                 if (equipmentType == EquipmentType.GLOVES) {
                     //Găng
-                    click(201, 331, 500)
+                    click(264, 441, 500)
                 }
                 if (equipmentType == EquipmentType.SHOE) {
                     //Giày
-                    click(247, 329, 500)
+                    click(334, 441, 500)
                 }
 
                 //Nhấn chọn đồ
                 if (equipmentType == EquipmentType.WEAPON) {
-                    swipe(201, 597, 201, 357, 500, 0)
-                    swipe(201, 597, 201, 357, 500, 0)
-                    swipe(201, 597, 201, 357, 500, 0)
-                    swipe(201, 597, 201, 357, 500, 500)
+                    swipe(269, 792, 269, 484, 500, 0)
+                    swipe(269, 792, 269, 484, 500, 0)
+                    swipe(269, 792, 269, 484, 500, 0)
+                    swipe(269, 792, 269, 484, 500, 500)
 
                     //Vũ khí
-                    click(263, 578, 500)
+                    click(351, 773, 500)
                 } else {
                     //Các đồ khác
-                    click(391, 472, 500)
+                    click(522, 630, 500)
                 }
 
                 //Kéo đầy thanh
-                swipe(133, 735, 502, 735, 500, 500)
+                swipe(177, 979, 678, 979, 500, 500)
 
                 //Nhấn điều chế
-                click(192 ,825, 5000)
+                click(260, 1102, 5000)
 
                 //Nhấn tìm thuộc tính
-                click(268, 323, 500)
+                click(362, 430, 500)
 
                 //Nhấn thiết lập sẵn A
-                click(112, 152, 500)
+                click(147, 203, 500)
 
                 //Nhấn tìm kiếm
-                click(177, 846, 1000)
+                click(234, 1124, 1000)
 
                 "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("Equip", 57, 301, 344 - 57, 352 - 301)
+                cropImage("Equip", 76, 406, 464 - 76, 471 - 406)
 
                 if (!auto) break
                 val comparativeWords = listOf("4 thuoc tinh co hieu luc")
@@ -279,21 +302,21 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 if (!presetB) continue
 
                 //Nhấn xác nhận
-                click(266, 864, 500)
+                click(353, 1148, 500)
 
                 //Nhấn tìm thuộc tính
-                click(268, 323, 500)
+                click(362, 430, 500)
 
                 //Nhấn thiết lập sẵn B
-                click(231, 150, 500)
+                click(305, 200, 500)
 
                 //Nhấn tìm kiếm
-                click(177, 846, 1000)
+                click(234, 1124, 1000)
 
                 "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("Equip", 57, 301, 344 - 57, 352 - 301)
+                cropImage("Equip", 76, 406, 464 - 76, 471 - 406)
 
                 if (!auto) break
                 val isTrue2 = getTextFromImage("Equip", comparativeWords, 2)
@@ -311,6 +334,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
     fun strengthen() {
         if (autoType == AutoType.NULL && strengthenPlace == null) {
             telegramBot.sendMessage("Command error!")
+            return
+        }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
             return
         }
         auto = true
@@ -372,6 +399,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
     fun eraseAttribute() {
         if (autoType == AutoType.NULL && eraseAttributePlace == null) {
             telegramBot.sendMessage("Command error!")
+            return
+        }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
             return
         }
         auto = true
@@ -440,6 +471,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
             telegramBot.sendMessage("Command error!")
             return
         }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
+            return
+        }
         auto = true
         telegramBot.sendMessage("Start!")
         Thread {
@@ -476,6 +511,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
     fun bossChest() {
         if (autoType == AutoType.NULL) {
             telegramBot.sendMessage("Command error!")
+            return
+        }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
             return
         }
         auto = true
@@ -558,6 +597,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
     fun character() {
         if (autoType == AutoType.NULL) {
             telegramBot.sendMessage("Command error!")
+            return
+        }
+        if (auto) {
+            telegramBot.sendMessage("Auto đang chạy! \n Tắt auto trước khi thực hiện command khác!")
             return
         }
         auto = true

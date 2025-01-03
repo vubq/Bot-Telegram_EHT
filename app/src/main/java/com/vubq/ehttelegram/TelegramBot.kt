@@ -1,5 +1,7 @@
 package com.vubq.ehttelegram
 
+import android.content.Context
+import android.util.DisplayMetrics
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.callbackQuery
@@ -10,13 +12,14 @@ import com.github.kotlintelegrambot.entities.Message
 import com.vubq.ehttelegram.enums.AutoType
 import com.vubq.ehttelegram.enums.EquipmentType
 
-class TelegramBot {
+
+class TelegramBot(private val context: Context) {
 
     private val ehtBot: EHTBot = EHTBot(this)
 
     private val allowedUserIds = setOf(5543802102)
 
-    val bot = bot {
+    private val bot = bot {
         token = "7623992481:AAFROtN9qewiJpo-ypdlYlFWkhQSp0mpxbo"
         dispatch {
             text {
@@ -35,6 +38,11 @@ class TelegramBot {
         }
         val commands = command.split("_");
         when (commands[0]) {
+            "/DPI" -> {
+                val metrics: DisplayMetrics = context.resources.displayMetrics
+                bot.sendMessage(ChatId.fromId(message.chat.id), metrics.densityDpi.toString())
+            }
+
             "/start" -> {
                 menuStart(message.chat.id)
             }
@@ -45,6 +53,20 @@ class TelegramBot {
 
             "/stopAuto" -> {
                 ehtBot.setAuto(false)
+            }
+
+            "/readFile" -> {
+                bot.sendMessage(
+                    ChatId.fromId(message.chat.id),
+                    ehtBot.readFile(commands[1])
+                )
+            }
+
+            "/clearFile" -> {
+                bot.sendMessage(
+                    ChatId.fromId(message.chat.id),
+                    ehtBot.clearFile(commands[1])
+                )
             }
 
             "/auto" -> {

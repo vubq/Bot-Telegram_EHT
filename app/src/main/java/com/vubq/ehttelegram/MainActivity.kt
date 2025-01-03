@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
         checkStoragePermission(this)
 
-        telegramBot = TelegramBot()
+        telegramBot = TelegramBot(this)
         telegramBot.start()
     }
 
