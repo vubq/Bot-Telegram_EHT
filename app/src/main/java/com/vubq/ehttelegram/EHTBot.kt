@@ -168,10 +168,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
         "com.machiav3lli.backup".openApp(500)
 
         //Nhấn khôi phục
-        click(406, 776, 500)
+        click(408, 896, 500)
 
         //Nhấn OK
-        click(460, 688, 4000)
+        click(458 ,687, 4000)
 
         //Mở EHT
         "com.superplanet.evilhunter".openApp(14000)
