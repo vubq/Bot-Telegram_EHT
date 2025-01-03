@@ -168,19 +168,19 @@ class EHTBot(private val telegramBot: TelegramBot) {
         "com.machiav3lli.backup".openApp(500)
 
         //Nhấn khôi phục
-        click(840, 2160, 500)
+        click(406, 776, 500)
 
         //Nhấn OK
-        click(950, 1520, 5000)
+        click(460, 688, 4000)
 
         //Mở EHT
-        "com.superplanet.evilhunter".openApp(13000)
+        "com.superplanet.evilhunter".openApp(14000)
 
         //Nhấn Touch To Start
-        click(505, 1995, 27000)
+        click(257, 817, 25000)
 
         //Nhấn đóng
-        click(530, 1800, 500)
+        click(265, 727, 500)
     }
 
     private fun backup() {
@@ -211,59 +211,59 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn chọn lò rèn hoặc kim hoàn
                 if (equipmentType == EquipmentType.NECKLACE || equipmentType == EquipmentType.RING) {
                     //Kim hoàn
-                    click(735, 1486, 500)
+                    click(351, 586, 500)
                 } else {
                     //Lò rèn
-                    click(432, 1361, 500)
+                    click(226, 521, 500)
                 }
 
                 //Nhấn chọn loại đồ
                 if (equipmentType == EquipmentType.ARMOR || equipmentType == EquipmentType.NECKLACE) {
                     //Giáp or dây chuyền
-                    click(283, 933, 500)
+                    click(153, 332, 500)
                 }
                 if (equipmentType == EquipmentType.GLOVES) {
                     //Găng
-                    click(390, 930, 500)
+                    click(201, 331, 500)
                 }
                 if (equipmentType == EquipmentType.SHOE) {
                     //Giày
-                    click(488, 926, 500)
+                    click(247, 329, 500)
                 }
 
                 //Nhấn chọn đồ
                 if (equipmentType == EquipmentType.WEAPON) {
-                    swipe(390, 1510, 390, 985, 500, 0)
-                    swipe(390, 1510, 390, 985, 500, 0)
-                    swipe(390, 1510, 390, 985, 500, 0)
-                    swipe(390, 1510, 390, 985, 500, 500)
+                    swipe(201, 597, 201, 357, 500, 0)
+                    swipe(201, 597, 201, 357, 500, 0)
+                    swipe(201, 597, 201, 357, 500, 0)
+                    swipe(201, 597, 201, 357, 500, 500)
 
                     //Vũ khí
-                    click(527, 1471, 500)
+                    click(263, 578, 500)
                 } else {
                     //Các đồ khác
-                    click(796, 1238, 500)
+                    click(391, 472, 500)
                 }
 
                 //Kéo đầy thanh
-                swipe(241, 1786, 965, 1786, 500, 500)
+                swipe(133, 735, 502, 735, 500, 500)
 
                 //Nhấn điều chế
-                click(364, 1977, 7000)
+                click(192 ,825, 5000)
 
                 //Nhấn tìm thuộc tính
-                click(520, 910, 500)
+                click(268, 323, 500)
 
                 //Nhấn thiết lập sẵn A
-                click(183, 527, 500)
+                click(112, 152, 500)
 
                 //Nhấn tìm kiếm
-                click(335, 2045, 2000)
+                click(177, 846, 1000)
 
                 "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("Equip", 85, 865, 623, 107)
+                cropImage("Equip", 57, 301, 344 - 57, 352 - 301)
 
                 if (!auto) break
                 val comparativeWords = listOf("4 thuoc tinh co hieu luc")
@@ -279,21 +279,21 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 if (!presetB) continue
 
                 //Nhấn xác nhận
-                click(527, 2084, 500)
+                click(266, 864, 500)
 
                 //Nhấn tìm thuộc tính
-                click(520, 910, 500)
+                click(268, 323, 500)
 
                 //Nhấn thiết lập sẵn B
-                click(455, 530, 500)
+                click(231, 150, 500)
 
                 //Nhấn tìm kiếm
-                click(335, 2045, 2000)
+                click(177, 846, 1000)
 
                 "Equip".screenCapture(0)
 
                 if (!auto) break
-                cropImage("Equip", 85, 865, 623, 107)
+                cropImage("Equip", 57, 301, 344 - 57, 352 - 301)
 
                 if (!auto) break
                 val isTrue2 = getTextFromImage("Equip", comparativeWords, 2)
