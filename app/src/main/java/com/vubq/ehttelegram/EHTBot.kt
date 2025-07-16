@@ -2,15 +2,13 @@ package com.vubq.ehttelegram
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.PixelFormat
-import android.hardware.display.DisplayManager
-import android.media.ImageReader
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.vubq.ehttelegram.enums.AutoType
 import com.vubq.ehttelegram.enums.EquipmentType
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileOutputStream
@@ -19,7 +17,6 @@ import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import kotlinx.coroutines.tasks.await
 
 class EHTBot(private val telegramBot: TelegramBot) {
 
@@ -60,6 +57,25 @@ class EHTBot(private val telegramBot: TelegramBot) {
 
     fun setEraseAttributePlace(eraseAttributePlace: Int?) {
         this.eraseAttributePlace = eraseAttributePlace
+    }
+
+    fun readFile(fileName: String): String {
+        val file = File("$pathData$fileName.txt")
+        if (!file.exists()) {
+            return "Không có file!"
+        } else {
+            return file.readText()
+        }
+    }
+
+    fun clearFile(fileName: String): String {
+        val file = File("$pathData$fileName.txt")
+        if (!file.exists()) {
+            return "Không có file!"
+        } else {
+            file.writeText("")
+            return "Đã clear file!"
+        }
     }
 
     private fun String.adbExecution(delay: Long) {
@@ -168,10 +184,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
         "com.machiav3lli.backup".openApp(500)
 
         //Nhấn khôi phục
-        click(840, 2160, 500)
+        click(841, 1958, 500)
 
         //Nhấn OK
-        click(950, 1520, 5000)
+        click(942, 1517, 5000)
 
         //Mở EHT
         "com.superplanet.evilhunter".openApp(13000)
@@ -188,13 +204,13 @@ class EHTBot(private val telegramBot: TelegramBot) {
         "com.machiav3lli.backup".openApp(500)
 
         //Nhấn sao lưu
-        click(248, 1604, 500)
+        click(257, 1374, 500)
 
-        //Nhấn bỏ APK
-        click(121, 839, 500)
+        //Nhấn dữ liệu phương tiện
+        click(124, 1468, 500)
 
         //Nhấn OK
-        click(939, 1643, 8000)
+        click(935, 1640, 8000)
     }
 
     fun equip() {
@@ -220,15 +236,15 @@ class EHTBot(private val telegramBot: TelegramBot) {
                 //Nhấn chọn loại đồ
                 if (equipmentType == EquipmentType.ARMOR || equipmentType == EquipmentType.NECKLACE) {
                     //Giáp or dây chuyền
-                    click(283, 933, 500)
+                    click(286, 929, 500)
                 }
                 if (equipmentType == EquipmentType.GLOVES) {
                     //Găng
-                    click(390, 930, 500)
+                    click(387, 933, 500)
                 }
                 if (equipmentType == EquipmentType.SHOE) {
                     //Giày
-                    click(488, 926, 500)
+                    click(491, 929, 500)
                 }
 
                 //Nhấn chọn đồ
@@ -242,7 +258,10 @@ class EHTBot(private val telegramBot: TelegramBot) {
                     click(527, 1471, 500)
                 } else {
                     //Các đồ khác
-                    click(796, 1238, 500)
+                    //Hỗn độn
+                    //click(796, 1238, 500)
+                    swipe(390, 1510, 390, 985, 500, 500)
+                    click(248, 1465, 500)
                 }
 
                 //Kéo đầy thanh

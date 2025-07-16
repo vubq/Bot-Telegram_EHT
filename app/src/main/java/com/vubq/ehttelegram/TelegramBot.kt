@@ -17,7 +17,7 @@ class TelegramBot {
     private val allowedUserIds = setOf(5543802102)
 
     val bot = bot {
-        token = "7623992481:AAFROtN9qewiJpo-ypdlYlFWkhQSp0mpxbo"
+        token = "8096295976:AAEYhXk7MT9Pa1w3w6QY9oUccpzcsSU8-Ik"
         dispatch {
             text {
                 handleTextCommand(text, message)
@@ -45,6 +45,20 @@ class TelegramBot {
 
             "/stopAuto" -> {
                 ehtBot.setAuto(false)
+            }
+
+            "/readFile" -> {
+                bot.sendMessage(
+                    ChatId.fromId(message.chat.id),
+                    ehtBot.readFile(commands[1])
+                )
+            }
+
+            "/clearFile" -> {
+                bot.sendMessage(
+                    ChatId.fromId(message.chat.id),
+                    ehtBot.clearFile(commands[1])
+                )
             }
 
             "/auto" -> {
